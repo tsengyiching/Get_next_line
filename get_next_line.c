@@ -12,23 +12,27 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-# define BUFFER_SIZE 1
+# define BUFFER_SIZE 10
 
 // int		get_next_line(int fd, char **line)
 // {
 //     int             ret;
-//     static char     *temp;
+//     static char     *save = NULL;
 //     char            buf[BUFFER_SIZE + 1];
 
+//     if (!(line = malloc(sizeof(*line))))
+//         return (-1);
+//     if (!(*line = malloc(sizeof(**line))))
+//         return (-1);
+//     *line[0] = 0;
 //     while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
 //     {
-        // buf[ret] = '\0';
-        // if (ft_strchr(buf, '\n'))
-        //     save = ft_strjoin(temp, buf);
-        // else
-        //     temp = ft_strdup(buf);
-        // if (ft_strchr(buf, '\n'))
-        //     break ;
+//         buf[ret] = '\0';
+//         save = ft_strjoin(*line, buf);
+//         free(*line);
+//         *line = save;
+//         if (ft_strchr(buf, '\n'))
+//             break ;
 //     }
 //     if (buf)
 //         return (1);
@@ -49,7 +53,9 @@ int main()
         return (-1);
     if (!(*line = malloc(sizeof(**line))))
         return (-1);
-    *line[0] = 0;
+    if (!(temp = malloc(sizeof(*temp))))
+        return (-1);
+    temp[0] = 0;
     if (fd == -1)
     {
         printf("ERROR");
@@ -58,14 +64,15 @@ int main()
     while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
     {
         buf[ret] = '\0';
-        save = ft_strjoin(*line, buf);
-        printf("%s\n", save);
-        free(*line);
-        *line = save;
+        save = ft_strjoin(temp, buf);
+        free(temp);
+        temp = save;
+        *line = ft_split(temp);
         if (ft_strchr(buf, '\n'))
             break ;
     }
-    printf("%s\n", *line);
+    printf("--save-- :%s\n", save);
+    printf("--*line-- :%s\n", *line);
     if (close(fd) == -1)
     {
         printf("close error");

@@ -41,22 +41,26 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_strdup(const char *s1)
+char 	*ft_split(char *str)
 {
-	int		i;
-	int		len;
-	char	*dst;
+	int i;
+	int j;
+	char *temp;
+	char *dst;
 
 	i = 0;
-	len = ft_strlen(s1);
-	if (!(dst = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	while (s1[i])
-	{
-		dst[i] = s1[i];
+	temp = str;
+	while (temp[i] && temp[i] != '\n')
 		i++;
+	if (!(dst = malloc(sizeof(char) * i + 1)))
+		return (0);
+	j = 0;
+	while (j < i)
+	{
+		dst[j] = temp[j];
+		j++;
 	}
-	dst[i] = '\0';
+	dst[j] = '\0';
 	return (dst);
 }
 
