@@ -6,7 +6,7 @@
 /*   By: yictseng <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/24 14:57:42 by yictseng     #+#   ##    ##    #+#       */
-/*   Updated: 2019/11/24 14:58:11 by yictseng    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/11/29 19:03:58 by yictseng    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,20 +33,20 @@ char	*ft_strchr(const char *s, int c)
 	while (ptr[i])
 	{
 		if (ptr[i] == c)
-			return (char *)(s + i);
+			return (char *)(s + i + 1);
 		i++;
 	}
 	if (ptr[i] == c)
-		return (char *)(s + i);
+		return (char *)(s + i + 1);
 	return (0);
 }
 
-char 	*ft_split(char *save)
+char	*ft_split(char *save)
 {
-	int i;
-	int j;
-	char *temp;
-	char *dst;
+	int		i;
+	int		j;
+	char	*temp;
+	char	*dst;
 
 	i = 0;
 	temp = save;
