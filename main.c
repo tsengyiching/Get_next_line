@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+
 int main(void)
 {
 	char *line;
@@ -9,7 +10,7 @@ int main(void)
 	while (j == 1)
 	{
 		j = get_next_line(fd, &line);
-		printf("----------------- LIGNE  %d\n%s\n retour : %d\n\n\n", i, line,j);
+		printf("--LIGNE  %d\n%s\n retour : %d\n\n\n", i, line, j);
 		free(line);
 		i++;
 	}

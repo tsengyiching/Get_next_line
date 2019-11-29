@@ -41,7 +41,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char 	*ft_split(char *str)
+char 	*ft_split(char *save)
 {
 	int i;
 	int j;
@@ -49,10 +49,10 @@ char 	*ft_split(char *str)
 	char *dst;
 
 	i = 0;
-	temp = str;
+	temp = save;
 	while (temp[i] && temp[i] != '\n')
 		i++;
-	if (!(dst = malloc(sizeof(char) * i + 1)))
+	if (!(dst = malloc(sizeof(char) * (i + 1))))
 		return (0);
 	j = 0;
 	while (j < i)

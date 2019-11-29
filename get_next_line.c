@@ -12,73 +12,44 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-# define BUFFER_SIZE 10
+# define BUFFER_SIZE 1
 
-// int		get_next_line(int fd, char **line)
-// {
-//     int             ret;
-//     static char     *save = NULL;
-//     char            buf[BUFFER_SIZE + 1];
-
-//     if (!(line = malloc(sizeof(*line))))
-//         return (-1);
-//     if (!(*line = malloc(sizeof(**line))))
-//         return (-1);
-//     *line[0] = 0;
-//     while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
-//     {
-//         buf[ret] = '\0';
-//         save = ft_strjoin(*line, buf);
-//         free(*line);
-//         *line = save;
-//         if (ft_strchr(buf, '\n'))
-//             break ;
-//     }
-//     if (buf)
-//         return (1);
-// }
-
-
-int main()
+int		get_next_line(int fd, char **line)
 {
-    int         fd;
-    int         ret;
-    char        *temp;
-    char        **line;
-    static char *save = NULL;
-    char        buf[BUFFER_SIZE + 1];
+    int             ret;
+    char            *temp1;
+    char            *temp2;
+    char            *cut;
+    static char     *save = NULL;
 
-    fd = open("text.txt", O_RDONLY);
-    if (!(line = malloc(sizeof(*line))))
-        return (-1);
-    if (!(*line = malloc(sizeof(**line))))
-        return (-1);
-    if (!(temp = malloc(sizeof(*temp))))
-        return (-1);
-    temp[0] = 0;
-    if (fd == -1)
+    if (!save)
     {
-        printf("ERROR");
-        return (1);
+        if (!(save = malloc(sizeof(*save) * (BUFFER_SIZE + 1))))
+            return (-1);
+        save[0] = '\0';
     }
-    while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
+    *line = ft_strjoin("", save);
+    while ((ret = read(fd, save, BUFFER_SIZE)) > 0)
     {
-        buf[ret] = '\0';
-        save = ft_strjoin(temp, buf);
-        free(temp);
-        temp = save;
-        *line = ft_split(temp);
-        if (ft_strchr(buf, '\n'))
+        save[ret] = '\0';
+        temp1 = ft_split(save);
+        temp2 = ft_strjoin(line[0], temp1);
+        free(temp1);
+        free(*line);
+        *line = temp2;
+        if (ft_strchr(save, '\n'))
+        {
+            cut = ft_strchr(save, '\n');
+            free(save);
+            save = ft_strjoin("", cut);
             break ;
+        }
     }
-    printf("--save-- :%s\n", save);
-    printf("--*line-- :%s\n", *line);
-    if (close(fd) == -1)
+    (ret > 0 ? ret = 1 : 0);
+    if (ret == 0)
     {
-        printf("close error");
-        return (1);
+        free(save);
+        save = 0;
     }
-    free(*line);
-    free(line);
-    return (0);
+    return (ret);
 }
