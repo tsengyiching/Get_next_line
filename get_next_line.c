@@ -13,42 +13,43 @@
 
 #include "get_next_line.h"
 
-int		get_next_line(int fd, char **line)
+int        get_next_line(int fd, char **line)
 {
-	int				ret;
-	char			*temp1;
-	char			*temp2;
-	char			*cut;
-	static char		*save = NULL;
-
-	if (!save)
-	{
-		if (!(save = malloc(sizeof(*save) * (BUFFER_SIZE + 1))))
-			return (-1);
-		save[0] = '\0';
-	}
-	*line = ft_strjoin("", save);
-	while ((ret = read(fd, save, BUFFER_SIZE)) > 0)
-	{
-		save[ret] = '\0';
-		temp1 = ft_split(save);
-		temp2 = ft_strjoin(line[0], temp1);
-		free(temp1);
-		free(*line);
-		*line = temp2;
-		if (ft_strchr(save, '\n'))
-		{
-			cut = ft_strchr(save, '\n');
-			free(save);
-			save = ft_strjoin("", cut);
-			break ;
-		}
-	}
-	(ret > 0 ? ret = 1 : 0);
-	if (ret == 0)
-	{
-		free(save);
-		save = 0;
-	}
-	return (ret);
+    int                ret;
+    char            *temp1;
+    char            *temp2;
+    char            *buf;
+    static char        *save;
+    int                indexCharset;
+    int                state;
+    
+    if (fd < 0 || !line || BUFFER_SIZE <= 0)
+        return (-1);
+    state = 1;
+    while (!(indexCharset = ft_strchr(save, '\n')))
+    {
+        if (!(buf = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+            return (-1);
+        ret = read(fd, buf, BUFFER_SIZE);
+        buf[ret] = '\0';
+        temp2 = save;
+        save = ft_strjoin(temp2, buf);
+        free(temp2);
+        free(buf);
+        if (!ft_strlen(buf))
+            state = 0;
+        if (!state)
+            break;
+    }
+    temp1 = NULL;
+    if (indexCharset > 0)
+    {
+        *line = ft_substr(save, 0, indexCharset - 1);
+        temp1 = ft_substr(save, indexCharset, ft_strlen(save));
+        free(save);
+        save = temp1;
+    }
+    else
+        *line = ft_substr(save, 0, ft_strlen(save));
+    return ((indexCharset == 0) ? 0 : 1);
 }
