@@ -11,14 +11,14 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line.h"  
 
-int        get_next_line(int fd, char **line)
+int     get_next_line(int fd, char **line)
 {
     int                ret;
-    char            *temp1;
-    char            *temp2;
-    char            *buf;
+    char               *temp1;
+    char               *temp2;
+    char               buf[BUFFER_SIZE + 1];
     static char        *save;
     int                indexCharset;
     int                state;
@@ -28,16 +28,13 @@ int        get_next_line(int fd, char **line)
     state = 1;
     while (!(indexCharset = ft_strchr(save, '\n')))
     {
-        if (!(buf = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-            return (-1);
         ret = read(fd, buf, BUFFER_SIZE);
         buf[ret] = '\0';
+        if (!ft_strlen(buf))
+            state = 0;
         temp2 = save;
         save = ft_strjoin(temp2, buf);
         free(temp2);
-        free(buf);
-        if (!ft_strlen(buf))
-            state = 0;
         if (!state)
             break;
     }
