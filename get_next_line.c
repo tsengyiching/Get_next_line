@@ -13,11 +13,20 @@
 
 #include "get_next_line.h"
 
+void	ft_put_line(char **line, char **save, int index_charset)
+{
+	char	*temp;
+
+	*line = ft_substr(*save, 0, index_charset - 1);
+	temp = ft_substr(*save, index_charset, ft_strlen(*save));
+	free(*save);
+	*save = temp;
+}
+
 int		get_next_line(int fd, char **line)
 {
 	int				ret;
-	char			*temp1;
-	char			*temp2;
+	char			*temp;
 	char			buf[BUFFER_SIZE + 1];
 	static char		*save;
 	int				index_charset;
@@ -30,22 +39,19 @@ int		get_next_line(int fd, char **line)
 	{
 		ret = read(fd, buf, BUFFER_SIZE);
 		buf[ret] = '\0';
+		printf("buf : [%s]\n", buf);
 		if (!ft_strlen(buf))
 			state = 0;
-		temp2 = save;
-		save = ft_strjoin(temp2, buf);
-		free(temp2);
+		temp = save;
+		save = ft_strjoin(temp, buf);
+		if (save[0] == '\0')
+			free(save);
+		free(temp);
 		if (!state)
 			break ;
 	}
-	temp1 = NULL;
 	if (index_charset > 0)
-	{
-		*line = ft_substr(save, 0, index_charset - 1);
-		temp1 = ft_substr(save, index_charset, ft_strlen(save));
-		free(save);
-		save = temp1;
-	}
+		ft_put_line(line, &save, index_charset);
 	else
 		*line = ft_substr(save, 0, ft_strlen(save));
 	return ((index_charset == 0) ? 0 : 1);
