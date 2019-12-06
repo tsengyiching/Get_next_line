@@ -13,7 +13,7 @@
 
 #include "get_next_line.h"
 
-void	ft_save(char **save, char *buf)
+static void	ft_save(char **save, char *buf)
 {
 	char *temp;
 
@@ -24,7 +24,7 @@ void	ft_save(char **save, char *buf)
 	free(temp);
 }
 
-void	ft_put_line(char **line, char **save, int index_charset)
+static void	ft_put_line(char **line, char **save, int index_charset)
 {
 	char	*temp;
 
@@ -34,7 +34,7 @@ void	ft_put_line(char **line, char **save, int index_charset)
 	*save = temp;
 }
 
-int		get_next_line(int fd, char **line)
+int			get_next_line(int fd, char **line)
 {
 	int				ret;
 	char			buf[BUFFER_SIZE + 1];
