@@ -22,6 +22,10 @@
 # include <stddef.h>
 # include <stdlib.h>
 
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1
+# endif
+
 size_t	ft_strlen(const char *s);
 int		ft_strchr(const char *s, int c);
 char	*ft_strjoin(char *s1, char const *s2);

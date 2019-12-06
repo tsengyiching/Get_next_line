@@ -47,14 +47,18 @@ int			get_next_line(int fd, char **line)
 	state = 1;
 	while (!(index_charset = ft_strchr(save, '\n')))
 	{
+		printf("---------\n");
 		ret = read(fd, buf, BUFFER_SIZE);
+		printf("ret : %d\n", ret);
 		buf[ret] = '\0';
+		printf("-buf- [%s]\n", buf);
 		if (!ft_strlen(buf))
 			state = 0;
 		ft_save(&save, buf);
 		if (!state)
 			break ;
 	}
+	printf("state : [%d]\n", state);
 	if (index_charset > 0)
 		ft_put_line(line, &save, index_charset);
 	else
