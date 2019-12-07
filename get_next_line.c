@@ -48,8 +48,6 @@ static void	ft_save(char **save, char *buf)
 
 	temp = *save;
 	*save = ft_strjoin(temp, buf);
-	if (*save[0] == '\0')
-		free(*save);
 	free(temp);
 }
 
@@ -68,23 +66,35 @@ int			get_next_line(int fd, char **line)
 	int				ret;
 	char			buf[BUFFER_SIZE + 1];
 	int				index_charset;
-	static char		*save;
+	static t_stock	*save;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (!(index_charset = ft_strchr(save, '\n')))
+	if (!save)
 	{
-		while ((ret = read(fd, buf, BUFFER_SIZE)))
+		if (!(save = malloc(sizeof(t_stock) * 1)))
+			return (-1);
+		save->str = 0;
+		save->i = 0;
+	}
+	while (!(index_charset = ft_strchr((save->str), '\n')) && save->i == 0)
+	{
+		ret = read(fd, buf, BUFFER_SIZE);
+		buf[ret] = '\0';
+		ft_save(&(save->str), buf);
+		if (ft_strlen(buf) < BUFFER_SIZE)
 		{
-			buf[ret] = '\0';
-			ft_save(&save, buf);
-			if (ft_strlen(buf) < BUFFER_SIZE)
-				break ;
+			save->i = 1;
+			break ;
 		}
 	}
-	if ((index_charset = ft_strchr(save, '\n')) > 0)
-		ft_put_line(line, &save, index_charset);
+	if ((index_charset = ft_strchr((save->str), '\n')) > 0)
+		ft_put_line(line, &(save->str), index_charset);
 	else
-		*line = ft_substr(save, 0, ft_strlen(save));
+	{
+		*line = ft_substr((save->str), 0, ft_strlen(save->str));
+		free(save->str);
+		free(save);
+	}
 	return ((index_charset == 0) ? 0 : 1);
 }
