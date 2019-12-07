@@ -6,7 +6,7 @@
 /*   By: yictseng <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/24 14:57:42 by yictseng     #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/05 17:05:49 by yictseng    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/12/07 19:00:57 by yictseng    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -41,28 +41,9 @@ int		ft_strchr(const char *str, int charset)
 	return (0);
 }
 
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	int		len;
-	char	*dst;
-
-	i = 0;
-	len = ft_strlen(s1);
-	if (!(dst = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	while (s1[i])
-	{
-		dst[i] = s1[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*substr;
+	char	*str;
 	size_t	i;
 	size_t	maxsize;
 
@@ -70,10 +51,39 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (s == 0)
 		return (NULL);
 	maxsize = ((start >= ft_strlen(s)) ? 0 : len);
-	if (!(substr = malloc((maxsize + 1) * sizeof(char))))
+	if (!(str = malloc(sizeof(char) * (maxsize + 1))))
 		return (NULL);
 	while (++i < maxsize && s[start + i])
-		substr[i] = s[start + i];
-	substr[i] = '\0';
-	return (substr);
+		str[i] = s[start + i];
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_strjoin(char *s1, char const *s2)
+{
+	char	*dst;
+	int		i;
+	int		j;
+
+	if (!s1)
+		return (ft_substr(s2, 0, ft_strlen(s2)));
+	if (!s2)
+		return (ft_substr(s1, 0, ft_strlen(s1)));
+	if (!(dst = (char *)malloc(sizeof(char) *
+					(ft_strlen(s1) + ft_strlen(s2) + 1))))
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		dst[i + j] = s2[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (dst);
 }

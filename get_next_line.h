@@ -6,7 +6,7 @@
 /*   By: yictseng <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/24 14:58:21 by yictseng     #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/07 18:37:33 by yictseng    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/12/07 19:00:06 by yictseng    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,6 +35,6 @@ typedef struct		s_stock
 size_t				ft_strlen(const char *s);
 int					ft_strchr(const char *s, int c);
 int					get_next_line(int fd, char **line);
-char				*ft_strdup(const char *s1);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
+char				*ft_strjoin(char *s1, char const *s2);
 #endif
