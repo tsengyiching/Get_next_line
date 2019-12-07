@@ -60,35 +60,6 @@ char	*ft_strdup(const char *s1)
 	return (dst);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
-{
-	char	*dst;
-	int		i;
-	int		j;
-
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	if (!(dst = (char *)malloc(sizeof(char) *
-					(ft_strlen(s1) + ft_strlen(s2) + 1))))
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		dst[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j])
-	{
-		dst[i + j] = s2[j];
-		j++;
-	}
-	dst[i + j] = '\0';
-	return (dst);
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*substr;

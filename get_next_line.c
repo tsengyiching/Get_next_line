@@ -13,6 +13,35 @@
 
 #include "get_next_line.h"
 
+static char	*ft_strjoin(char *s1, char const *s2)
+{
+	char	*dst;
+	int		i;
+	int		j;
+
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	if (!(dst = (char *)malloc(sizeof(char) *
+					(ft_strlen(s1) + ft_strlen(s2) + 1))))
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		dst[i + j] = s2[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (dst);
+}
+
 static void	ft_save(char **save, char *buf)
 {
 	char *temp;
@@ -38,28 +67,22 @@ int			get_next_line(int fd, char **line)
 {
 	int				ret;
 	char			buf[BUFFER_SIZE + 1];
-	static char		*save;
 	int				index_charset;
-	int				state;
+	static char		*save;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	state = 1;
-	while (!(index_charset = ft_strchr(save, '\n')))
+	if (!(index_charset = ft_strchr(save, '\n')))
 	{
-		printf("---------\n");
-		ret = read(fd, buf, BUFFER_SIZE);
-		printf("ret : %d\n", ret);
-		buf[ret] = '\0';
-		printf("-buf- [%s]\n", buf);
-		if (!ft_strlen(buf))
-			state = 0;
-		ft_save(&save, buf);
-		if (!state)
-			break ;
+		while ((ret = read(fd, buf, BUFFER_SIZE)))
+		{
+			buf[ret] = '\0';
+			ft_save(&save, buf);
+			if (ft_strlen(buf) < BUFFER_SIZE)
+				break ;
+		}
 	}
-	printf("state : [%d]\n", state);
-	if (index_charset > 0)
+	if ((index_charset = ft_strchr(save, '\n')) > 0)
 		ft_put_line(line, &save, index_charset);
 	else
 		*line = ft_substr(save, 0, ft_strlen(save));
