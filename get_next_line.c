@@ -12,7 +12,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <string.h>
 
 static int	ft_read_line(t_stock *tab, int fd)
 {
@@ -55,10 +54,7 @@ int			get_next_line(int fd, char **line)
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
 	if (!tab.str)
-	{
-		//tab.str = 0;
 		tab.state = 0;
-	}
 	index_charset = ft_read_line(&tab, fd);
 	if ((index_charset = ft_strchr((tab.str), '\n')) > 0)
 		ft_put_line(line, &(tab.str), index_charset);
