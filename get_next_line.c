@@ -26,7 +26,8 @@ static int	ft_read_line(t_stock *tab, int fd)
 		buf[ret] = '\0';
 		temp = tab->str;
 		tab->str = ft_strjoin(temp, buf);
-		free(temp);
+		if (temp != NULL)
+			free(temp);
 		if (ft_strlen(buf) < BUFFER_SIZE)
 		{
 			tab->state = 1;
@@ -36,14 +37,14 @@ static int	ft_read_line(t_stock *tab, int fd)
 	return (index_charset);
 }
 
-static void	ft_put_line(char **line, char **save, int index_charset)
+static void	ft_put_line(char **line, char **str, int index_charset)
 {
 	char	*temp;
 
-	*line = ft_substr(*save, 0, index_charset - 1);
-	temp = ft_substr(*save, index_charset, ft_strlen(*save));
-	free(*save);
-	*save = temp;
+	*line = ft_substr(*str, 0, index_charset - 1);
+	temp = ft_substr(*str, index_charset, ft_strlen(*str));
+	free(*str);
+	*str = temp;
 }
 
 int			get_next_line(int fd, char **line)
