@@ -13,13 +13,27 @@
 
 #include "get_next_line.h"
 
-static void	ft_save(char **save, char *buf)
+static int	ft_read_line(t_stock *save, int fd)
 {
-	char *temp;
+	int		ret;
+	int		index_charset;
+	char	*temp;
+	char	buf[BUFFER_SIZE + 1];
 
-	temp = *save;
-	*save = ft_strjoin(temp, buf);
-	free(temp);
+	while (!(index_charset = ft_strchr((save->str), '\n')) && save->i == 0)
+	{
+		ret = read(fd, buf, BUFFER_SIZE);
+		buf[ret] = '\0';
+		temp = save->str;
+		save->str = ft_strjoin(temp, buf);
+		free(temp);
+		if (ft_strlen(buf) < BUFFER_SIZE)
+		{
+			save->i = 1;
+			break ;
+		}
+	}
+	return (index_charset);
 }
 
 static void	ft_put_line(char **line, char **save, int index_charset)
@@ -34,8 +48,6 @@ static void	ft_put_line(char **line, char **save, int index_charset)
 
 int			get_next_line(int fd, char **line)
 {
-	int				ret;
-	char			buf[BUFFER_SIZE + 1];
 	int				index_charset;
 	static t_stock	*save;
 
@@ -48,17 +60,7 @@ int			get_next_line(int fd, char **line)
 		save->str = 0;
 		save->i = 0;
 	}
-	while (!(index_charset = ft_strchr((save->str), '\n')) && save->i == 0)
-	{
-		ret = read(fd, buf, BUFFER_SIZE);
-		buf[ret] = '\0';
-		ft_save(&(save->str), buf);
-		if (ft_strlen(buf) < BUFFER_SIZE)
-		{
-			save->i = 1;
-			break ;
-		}
-	}
+	index_charset = ft_read_line(save, fd);
 	if ((index_charset = ft_strchr((save->str), '\n')) > 0)
 		ft_put_line(line, &(save->str), index_charset);
 	else
