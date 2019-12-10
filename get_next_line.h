@@ -29,7 +29,7 @@
 typedef struct		s_stock
 {
 	char			*str;
-	int				state;
+	int				eof;
 }					t_stock;
 
 size_t				ft_strlen(const char *s);

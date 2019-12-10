@@ -13,56 +13,53 @@
 
 #include "get_next_line.h"
 
-static int	ft_read_line(t_stock *tab, int fd)
+static int	ft_read_line(t_stock *save, int fd)
 {
 	int		ret;
 	int		index_charset;
 	char	*temp;
 	char	buf[BUFFER_SIZE + 1];
 
-	while (!(index_charset = ft_strchr((tab->str), '\n')) && tab->state == 0)
+	while (!(index_charset = ft_strchr((save->str), '\n')) && save->eof == 0)
 	{
 		ret = read(fd, buf, BUFFER_SIZE);
 		buf[ret] = '\0';
-		temp = tab->str;
-		tab->str = ft_strjoin(temp, buf);
+		temp = save->str;
+		save->str = ft_strjoin(temp, buf);
 		if (temp != NULL)
 			free(temp);
 		if (ft_strlen(buf) < BUFFER_SIZE)
 		{
-			tab->state = 1;
+			save->eof = 1;
 			break ;
 		}
 	}
 	return (index_charset);
 }
 
-static void	ft_put_line(char **line, char **str, int index_charset)
-{
-	char	*temp;
-
-	*line = ft_substr(*str, 0, index_charset - 1);
-	temp = ft_substr(*str, index_charset, ft_strlen(*str));
-	free(*str);
-	*str = temp;
-}
-
 int			get_next_line(int fd, char **line)
 {
 	int				index_charset;
-	static t_stock	tab;
+	char			*temp;
+	static t_stock	save;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (!tab.str)
-		tab.state = 0;
-	index_charset = ft_read_line(&tab, fd);
-	if ((index_charset = ft_strchr((tab.str), '\n')) > 0)
-		ft_put_line(line, &(tab.str), index_charset);
+	if (!save.str)
+		save.eof = 0;
+	index_charset = ft_read_line(&save, fd);
+	if ((index_charset = ft_strchr((save.str), '\n')) > 0)
+	{
+		*line = ft_substr(save.str, 0, index_charset - 1);
+		temp = ft_substr(save.str, index_charset, ft_strlen(save.str));
+		free(save.str);
+		save.str = temp;
+	}
 	else
 	{
-		*line = ft_substr((tab.str), 0, ft_strlen(tab.str));
-		free(tab.str);
+		*line = ft_substr((save.str), 0, ft_strlen(save.str));
+		free(save.str);
+		save.str = 0;
 	}
 	return ((index_charset == 0) ? 0 : 1);
 }
