@@ -22,7 +22,8 @@ static int	ft_read_line(t_stock *save, int fd)
 
 	while (!(index_charset = ft_strchr((save->str), '\n')) && save->eof == 0)
 	{
-		ret = read(fd, buf, BUFFER_SIZE);
+		if ((ret = read(fd, buf, BUFFER_SIZE)) == -1)
+			return (-1);
 		buf[ret] = '\0';
 		temp = save->str;
 		save->str = ft_strjoin(temp, buf);
@@ -47,7 +48,8 @@ int			get_next_line(int fd, char **line)
 		return (-1);
 	if (!save.str)
 		save.eof = 0;
-	index_charset = ft_read_line(&save, fd);
+	if ((index_charset = ft_read_line(&save, fd)) == -1)
+		return (-1);
 	if ((index_charset = ft_strchr((save.str), '\n')) > 0)
 	{
 		*line = ft_substr(save.str, 0, index_charset - 1);
